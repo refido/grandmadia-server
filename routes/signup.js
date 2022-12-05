@@ -4,15 +4,15 @@ const Users = require('../schemas/users');
 
 const router = express.Router();
 
-const userSchema = Joi.object({
+const signupSchema = Joi.object({
   name: Joi.string().required(),
-  email: Joi.string().email(),
+  email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
 
 router.post('/signup', async (req, res) => {
   try {
-    const { name, email, password } = await userSchema.validateAsync(
+    const { name, email, password } = await signupSchema.validateAsync(
       req.body
     );
 
@@ -26,7 +26,7 @@ router.post('/signup', async (req, res) => {
 
     await Users.create({ name, email, password });
 
-    res.status(201).send({ message: 'Akun berhasil dibuat.' });
+    return res.status(201).send({ message: 'Akun berhasil dibuat.' });
   } catch (error) {
     console.log(`${req.method} ${req.originalUrl} : ${error.message}`);
     return res.status(400).send({

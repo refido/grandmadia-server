@@ -1,24 +1,20 @@
-// fitur ini masih belum kepake karena di webnya saat udah login, user nggak bisa pencet login lagi
-// fitur login diperlukan saat klik cart aja
-
 const jwt = require('jsonwebtoken');
 const { Users } = require('../models');
 require('dotenv').config();
 
-// 유저 인증에 실패하면 403 상태 코드를 반환한다.
 module.exports = async (req, res, next) => {
   try {
     const cookies = req.cookies[process.env.COOKIE_NAME];
     if (!cookies) {
       return res.status(403).send({
-        errorMessage: '로그인이 필요한 기능입니다.',
+        errorMessage: 'Login diperlukan.',
       });
     }
 
     const [tokenType, tokenValue] = cookies.split(' ');
     if (tokenType !== 'Bearer') {
       return res.status(403).send({
-        errorMessage: '전달된 쿠키에서 오류가 발생하였습니다.',
+        errorMessage: 'Terdapat error pada cookie yang diteruskan.',
       });
     }
 
@@ -30,7 +26,7 @@ module.exports = async (req, res, next) => {
   } catch (error) {
     console.trace(error);
     return res.status(403).send({
-      errorMessage: '로그인이 필요한 기능입니다.',
+      errorMessage: 'Login diperlukan.',
     });
   }
 };
