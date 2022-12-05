@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 const connect = () => {
     mongoose
         // .connect("mongodb://localhost:27017/voyage_blog") //local
-        .connect("mongodb+srv://revido:mymongodb@cluster0.5iwafmj.mongodb.net/voyageblog?retryWrites=true&w=majority") //server
+        .connect(`mongodb+srv://revido:${process.env.DB_PASSWORD}@cluster0.5iwafmj.mongodb.net/grandmadia?retryWrites=true&w=majority`)
         .catch(err=>console.log(err))
 }
 

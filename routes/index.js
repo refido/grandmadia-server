@@ -1,4 +1,4 @@
-const postsRouter = require('./posts')
-const commentsRouter = require('./comments')
+const signupRouter = require('./signup')
+const loginRouter = require('./login')
 
-module.exports = [postsRouter,commentsRouter]
+module.exports = [signupRouter, loginRouter]
