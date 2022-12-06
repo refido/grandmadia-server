@@ -16,6 +16,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = await loginSchema.validateAsync(req.body);
 
     const user = await Users.find({ email });
+    const userId = user[0]._id;
 
     if (!user) {
       return res.status(400).send({
@@ -33,7 +34,7 @@ router.post('/login', async (req, res) => {
     expires.setMinutes(expires.getMinutes() + 60);
 
     const token = jwt.sign(
-      { userId: user.userId },
+      { userId: userId },
       process.env.SECRET_KEY,
       { expiresIn: '3600s' }
     );
