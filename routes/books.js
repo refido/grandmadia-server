@@ -30,8 +30,6 @@ router.post("/books", async (req, res) => {
     newPrice,
     oldPrice,
     category,
-    storeName,
-    storeLocation,
     description,
     jumlahHalaman,
     tanggalTerbit,
@@ -51,8 +49,6 @@ router.post("/books", async (req, res) => {
     newPrice,
     oldPrice,
     category,
-    storeName,
-    storeLocation,
     description,
     jumlahHalaman,
     tanggalTerbit,
@@ -65,7 +61,7 @@ router.post("/books", async (req, res) => {
     information,
   });
   return res
-    .status(200)
+    .status(201)
     .send({ message: "Sebuah buku telah berhasil ditambahkan" });
 });
 
