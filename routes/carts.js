@@ -12,6 +12,13 @@ router.post('/cart', authMiddleware, async (req, res) => {
     const { tokobookId, jumlah } = req.body;
     const userId = user._id;
 
+    const selectedbook = await storeBooks.findById(tokobookId).exec();
+    const stokBuku = selectedbook.stokBuku;
+
+    if (jumlah > stokBuku) {
+        return res.status(400).send({ message: "Jumlah melebihi stok buku"})
+    }
+
     await Carts.create({
         userId,
         tokobookId,
@@ -68,31 +75,49 @@ router.get('/cart', authMiddleware, async (req, res) => {
         const tokobook = tokobooksListbyId[item.tokobookId];
         const book = booksListbyId[tokobook.bookId];
         return ({
+            itemId: item._id,
             storeName: tokobook.storeName,
             title: book.title,
             cover: book.cover,
             berat: book.berat,
-            newPrice: book.newPrice,
-            oldPrice: book.oldPrice,
+            price: book.price,
             jumlah: item.jumlah,
             stokBuku: tokobooksListbyId[item.tokobookId].stokBuku,
             createdAt: item.createdAt
         })
     });
 
-    const sortedResult = result.sort((a, b) => {
-        const date1 = a.createdAt;
-        const date2 = b.createdAt;
-        if (date1 < date2) {
-            return -1
-        } else if (date1 > date2) {
-            return 1
-        } else {
-            return 1
-        }
-    });
+    result.sort((a, b) => { a.createdAt - b.createdAt});
 
-    res.status(200).send({ cart: sortedResult });
-})
+    res.status(200).send({ cart: result });
+});
+
+router.patch('/cart/:itemId', authMiddleware, async (req, res) => {
+    const { itemId } = req.params;
+    const { jumlah } = req.body;
+
+    const existCart = await Carts.findById(itemId).exec();
+
+    if (!existCart) {
+        return res.status(404).send({ message: "Item tidak ditemukan"})
+    }
+
+    const tokobookId = existCart.tokobookId;
+    const selectedbook = await storeBooks.findById(tokobookId).exec();
+    const stokBuku = selectedbook.stokBuku;
+
+    if (jumlah > stokBuku) {
+        return res.status(400).send({ message: "Jumlah melebihi stok buku"})
+    }
+
+    if (jumlah < 1) {
+        return res.status(400).send({ message: "Jumlah buku minimal 1"});
+    }
+
+    existCart.jumlah = jumlah;
+    await existCart.save();
+
+    return res.status(200).send({ message: "Jumlah buku berhasil diubah."})
+});
 
 module.exports = router;

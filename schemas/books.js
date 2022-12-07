@@ -14,11 +14,7 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    newPrice: {
-      type: Number,
-      required: true,
-    },
-    oldPrice: {
+    price: {
       type: Number,
       required: true,
     },
