@@ -20,11 +20,13 @@ router.post("/login", async (req, res) => {
         errorMessage:
           "Akun tidak ditemukan. Silakan masuk dengan akun yang terdaftar.",
       });
+    } else {
+      console.log(user);
     }
-    
-    const userId = user[0]?._id;
 
-    if (password !== user[0]?.password) {
+    const userId = user?._id;
+
+    if (password !== user?.password) {
       return res.status(400).send({
         errorMessage: "Password salah.",
       });
@@ -40,7 +42,7 @@ router.post("/login", async (req, res) => {
     res.cookie(process.env.COOKIE_NAME, `Bearer ${token}`, {
       expires: expires,
     });
-    return res.status(200).json({ messahe: "Login berhasil." });
+    return res.status(200).json({ message: "Login berhasil", token: token });
   } catch (error) {
     console.log(`${req.method} ${req.originalUrl} : ${error.message}`);
     return res.status(400).send({
