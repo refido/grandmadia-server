@@ -133,4 +133,20 @@ router.delete('/cart/:itemId', authMiddleware, async (req, res) => {
     res.status(200).send({ message: "Pesanan berhasil dihapus"})
 });
 
+router.delete('/cart', authMiddleware, async (req, res) => {
+    const { itemIds } = req.body;
+
+    const existCart = await Carts.find({ _id: itemIds });
+
+    if (existCart.length !== itemIds.length) {
+        return res.status(400).send({ message: "Terdapat item yang tidak dapat ditemukan."})
+    }
+
+    for (const cart of existCart) {
+        await cart.delete();
+    }
+
+    res.status(200).send({ message: "Pesanan berhasil dihapus."})
+});
+
 module.exports = router;
