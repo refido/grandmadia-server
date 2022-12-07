@@ -89,7 +89,7 @@ router.get('/cart', authMiddleware, async (req, res) => {
 
     result.sort((a, b) => { a.createdAt - b.createdAt});
 
-    res.status(200).send({ cart: result });
+    res.status(200).send({ data: result });
 });
 
 router.patch('/cart/:itemId', authMiddleware, async (req, res) => {

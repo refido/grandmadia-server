@@ -1,5 +1,4 @@
 const express = require("express");
-// const authMiddleware = require("../middlewares/authMiddleware");
 const Books = require("../schemas/books");
 
 const router = express.Router();
