@@ -99,7 +99,7 @@ router.patch('/cart/:itemId', authMiddleware, async (req, res) => {
     const existCart = await Carts.findById(itemId).exec();
 
     if (!existCart) {
-        return res.status(404).send({ message: "Item tidak ditemukan"})
+        return res.status(400).send({ message: "Item tidak ditemukan"})
     }
 
     const tokobookId = existCart.tokobookId;
@@ -117,7 +117,20 @@ router.patch('/cart/:itemId', authMiddleware, async (req, res) => {
     existCart.jumlah = jumlah;
     await existCart.save();
 
-    return res.status(200).send({ message: "Jumlah buku berhasil diubah."})
+    return res.status(200).send({ message: "Jumlah pesanan berhasil diubah."})
+});
+
+router.delete('/cart/:itemId', authMiddleware, async (req, res) => {
+    const { itemId } = req.params;
+
+    const existCart = await Carts.findById(itemId).exec();
+
+    if (!existCart) {
+        return res.status(400).send({ message: "Item tidak ditemukan"})
+    }
+
+    await existCart.delete();
+    res.status(200).send({ message: "Pesanan berhasil dihapus"})
 });
 
 module.exports = router;
