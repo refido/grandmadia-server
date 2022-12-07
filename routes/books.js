@@ -1,5 +1,4 @@
 const express = require("express");
-// const authMiddleware = require("../middlewares/authMiddleware");
 const Books = require("../schemas/books");
 
 const router = express.Router();
@@ -27,8 +26,7 @@ router.post("/books", async (req, res) => {
     title,
     author,
     cover,
-    newPrice,
-    oldPrice,
+    price,
     category,
     description,
     jumlahHalaman,
@@ -46,8 +44,7 @@ router.post("/books", async (req, res) => {
     title,
     author,
     cover,
-    newPrice,
-    oldPrice,
+    price,
     category,
     description,
     jumlahHalaman,

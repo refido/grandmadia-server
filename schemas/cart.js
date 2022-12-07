@@ -12,10 +12,6 @@ const cartSchema = new mongoose.Schema({
     jumlah: {
         type: Number,
         required: true
-    },
-    totalHarga: {
-        type: Number,
-        required: true
     }
 },{
     timestamps:true
