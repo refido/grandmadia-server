@@ -1,43 +1,41 @@
-const express = require('express');
-const Joi = require('joi');
-const Users = require('../schemas/users');
-const jwt = require('jsonwebtoken');
+const express = require("express");
+const Joi = require("joi");
+const Users = require("../schemas/users");
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
-require('dotenv').config();
+require("dotenv").config();
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { email, password } = await loginSchema.validateAsync(req.body);
-
-    const user = await Users.find({ email });
-    const userId = user[0]._id;
-
+    const user = await Users.findOne({ email });
     if (!user) {
       return res.status(400).send({
-        errorMessage: 'Akun tidak ditemukan. Silakan masuk dengan akun yang terdaftar.',
+        errorMessage:
+          "Akun tidak ditemukan. Silakan masuk dengan akun yang terdaftar.",
       });
     }
+    
+    const userId = user[0]?._id;
 
-    if (password !== user[0].password) {
+    if (password !== user[0]?.password) {
       return res.status(400).send({
-        errorMessage: 'Password salah.',
+        errorMessage: "Password salah.",
       });
     }
 
     const expires = new Date();
     expires.setMinutes(expires.getMinutes() + 60);
 
-    const token = jwt.sign(
-      { userId: userId },
-      process.env.SECRET_KEY,
-      { expiresIn: '3600s' }
-    );
+    const token = jwt.sign({ userId: userId }, process.env.SECRET_KEY, {
+      expiresIn: "3600s",
+    });
 
     res.cookie(process.env.COOKIE_NAME, `Bearer ${token}`, {
       expires: expires,
@@ -46,7 +44,7 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.log(`${req.method} ${req.originalUrl} : ${error.message}`);
     return res.status(400).send({
-      errorMessage: 'Format data tidak valid.',
+      errorMessage: "Format data tidak valid.",
     });
   }
 });
